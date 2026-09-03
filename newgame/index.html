@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chess — Group 10</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Chessboard.js styling -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.css">
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<!-- ===================== TOP BAR ===================== -->
+<header class="topbar">
+  <div class="brand" data-i18n="brandName">CHESS</div>
+  <div class="topbar-actions">
+    <button id="btn-theme" class="icon-btn" title="Theme" data-i18n-title="displayMode">☾</button>
+    <button id="btn-lang" class="icon-btn" title="Language / Ngôn ngữ">VI</button>
+    <button id="btn-settings-quick" class="icon-btn" title="Settings" data-i18n-title="settings">⚙</button>
+  </div>
+</header>
+
+<!-- ===================== MAIN MENU SCREEN ===================== -->
+<main id="screen-menu" class="screen screen-menu">
+  <div class="menu-hero">
+    <div class="menu-hero-glyph">♔</div>
+    <h1 class="menu-title" data-i18n="brandName">CHESS</h1>
+    <p class="menu-subtitle" data-i18n="menuSubtitle">Đồ án Nhóm 10 — Cờ vua trên trình duyệt</p>
+  </div>
+
+  <nav class="menu-list">
+    <button class="menu-item" id="menu-local" data-i18n="localGame">Đấu nội bộ (2 người)</button>
+    <button class="menu-item" id="menu-ai" data-i18n="playAI">Đấu với máy</button>
+    <button class="menu-item menu-item-morale" id="menu-morale" data-i18n="moraleMode">CHẾ ĐỘ SĨ KHÍ</button>
+    <button class="menu-item" id="menu-settings" data-i18n="settings">Cài đặt</button>
+    <button class="menu-item" id="menu-howto" data-i18n="howToPlay">Hướng dẫn chơi</button>
+  </nav>
+
+  <footer class="menu-footer">
+    <span data-i18n="footerNote">Chạy hoàn toàn offline trên trình duyệt — không cần Internet.</span>
+  </footer>
+</main>
+
+<!-- ===================== AI SETUP SCREEN ===================== -->
+<section id="screen-ai-setup" class="screen screen-setup hidden">
+  <div class="setup-card">
+    <h2 data-i18n="playAI">Đấu với máy</h2>
+
+    <div class="setup-group">
+      <label data-i18n="chooseColor">Chọn màu quân</label>
+      <div class="option-row" id="setup-color">
+        <button class="option-btn" data-value="w" data-i18n="playWhite">Chơi Trắng</button>
+        <button class="option-btn" data-value="b" data-i18n="playBlack">Chơi Đen</button>
+        <button class="option-btn active" data-value="random" data-i18n="playRandom">Ngẫu nhiên</button>
+      </div>
+    </div>
+
+    <div class="setup-group">
+      <label data-i18n="difficulty">Độ khó</label>
+      <div class="option-row" id="setup-difficulty">
+        <button class="option-btn" data-value="beginner" data-i18n="diffBeginner">Beginner</button>
+        <button class="option-btn" data-value="easy" data-i18n="diffEasy">Easy</button>
+        <button class="option-btn active" data-value="medium" data-i18n="diffMedium">Medium</button>
+        <button class="option-btn" data-value="hard" data-i18n="diffHard">Hard</button>
+        <button class="option-btn" data-value="expert" data-i18n="diffExpert">Expert</button>
+      </div>
+    </div>
+
+    <div class="setup-group">
+      <label data-i18n="timeControl">Thời gian</label>
+      <div class="option-row" id="setup-timer">
+        <button class="option-btn active" data-value="none" data-i18n="timerNone">Không giới hạn</button>
+        <button class="option-btn" data-value="5+0">5 + 0</button>
+        <button class="option-btn" data-value="10+0">10 + 0</button>
+        <button class="option-btn" data-value="10+5">10 + 5</button>
+        <button class="option-btn" data-value="15+10">15 + 10</button>
+      </div>
+    </div>
+
+    <div class="setup-actions">
+      <button class="btn btn-ghost" id="setup-ai-back" data-i18n="back">Quay lại</button>
+      <button class="btn btn-primary" id="setup-ai-start" data-i18n="startGame">Bắt đầu</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LOCAL SETUP SCREEN ===================== -->
+<section id="screen-local-setup" class="screen screen-setup hidden">
+  <div class="setup-card">
+    <h2 data-i18n="localGame">Đấu nội bộ (2 người)</h2>
+    <div class="setup-group">
+      <label data-i18n="timeControl">Thời gian</label>
+      <div class="option-row" id="setup-local-timer">
+        <button class="option-btn active" data-value="none" data-i18n="timerNone">Không giới hạn</button>
+        <button class="option-btn" data-value="5+0">5 + 0</button>
+        <button class="option-btn" data-value="10+0">10 + 0</button>
+        <button class="option-btn" data-value="10+5">10 + 5</button>
+        <button class="option-btn" data-value="15+10">15 + 10</button>
+      </div>
+    </div>
+    <div class="setup-actions">
+      <button class="btn btn-ghost" id="setup-local-back" data-i18n="back">Quay lại</button>
+      <button class="btn btn-primary" id="setup-local-start" data-i18n="startGame">Bắt đầu</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SI KHI (MORALE) SETUP SCREEN ===================== -->
+<section id="screen-morale-setup" class="screen screen-setup hidden">
+  <div class="setup-card">
+    <h2 data-i18n="moraleMode">CHẾ ĐỘ SĨ KHÍ</h2>
+    <p class="setup-intro" data-i18n="moraleIntro">Mỗi quân có Sĩ Khí riêng — tích lũy dần và dùng để kích hoạt Skill đặc biệt.</p>
+
+    <div class="setup-group">
+      <label data-i18n="opponentType">Đối thủ</label>
+      <div class="option-row" id="setup-morale-submode">
+        <button class="option-btn active" data-value="local" data-i18n="localGame">Đấu nội bộ (2 người)</button>
+        <button class="option-btn" data-value="ai" data-i18n="playAI">Đấu với máy</button>
+      </div>
+    </div>
+
+    <div class="setup-group setup-morale-ai-only hidden">
+      <label data-i18n="chooseColor">Chọn màu quân</label>
+      <div class="option-row" id="setup-morale-color">
+        <button class="option-btn" data-value="w" data-i18n="playWhite">Chơi Trắng</button>
+        <button class="option-btn" data-value="b" data-i18n="playBlack">Chơi Đen</button>
+        <button class="option-btn active" data-value="random" data-i18n="playRandom">Ngẫu nhiên</button>
+      </div>
+    </div>
+
+    <div class="setup-group setup-morale-ai-only hidden">
+      <label data-i18n="difficulty">Độ khó</label>
+      <div class="option-row" id="setup-morale-difficulty">
+        <button class="option-btn" data-value="beginner" data-i18n="diffBeginner">Beginner</button>
+        <button class="option-btn" data-value="easy" data-i18n="diffEasy">Easy</button>
+        <button class="option-btn active" data-value="medium" data-i18n="diffMedium">Medium</button>
+        <button class="option-btn" data-value="hard" data-i18n="diffHard">Hard</button>
+        <button class="option-btn" data-value="expert" data-i18n="diffExpert">Expert</button>
+      </div>
+    </div>
+
+    <div class="setup-group">
+      <label data-i18n="timeControl">Thời gian</label>
+      <div class="option-row" id="setup-morale-timer">
+        <button class="option-btn active" data-value="none" data-i18n="timerNone">Không giới hạn</button>
+        <button class="option-btn" data-value="5+0">5 + 0</button>
+        <button class="option-btn" data-value="10+0">10 + 0</button>
+        <button class="option-btn" data-value="10+5">10 + 5</button>
+        <button class="option-btn" data-value="15+10">15 + 10</button>
+      </div>
+    </div>
+
+    <div class="setup-actions">
+      <button class="btn btn-ghost" id="setup-morale-back" data-i18n="back">Quay lại</button>
+      <button class="btn btn-primary" id="setup-morale-start" data-i18n="startGame">Bắt đầu</button>
+    </div>
+  </div>
+</section>
+<section id="screen-game" class="screen screen-game hidden">
+  <div class="game-layout">
+
+    <!-- LEFT PANEL: players / clocks / captured -->
+    <aside class="panel panel-left">
+      <div class="morale-mode-tag hidden" id="morale-mode-tag" data-i18n="moraleMode">CHẾ ĐỘ SĨ KHÍ</div>
+
+      <div class="player-card" id="player-card-top">
+        <div class="player-name" id="name-top">—</div>
+        <div class="clock" id="clock-top">--:--</div>
+        <div class="captured-row" id="captured-top"></div>
+      </div>
+
+      <div class="status-box" id="game-status-box">
+        <span id="game-status-text" data-i18n="turnWhite">Lượt của Trắng</span>
+      </div>
+
+      <div class="player-card" id="player-card-bottom">
+        <div class="player-name" id="name-bottom">—</div>
+        <div class="clock" id="clock-bottom">--:--</div>
+        <div class="captured-row" id="captured-bottom"></div>
+      </div>
+
+      <div class="material-adv" id="material-advantage"></div>
+    </aside>
+
+    <!-- CENTER: board -->
+    <div class="panel panel-board">
+      <div id="board-wrapper">
+        <div id="chess-board"></div>
+      </div>
+      <div class="ai-thinking hidden" id="ai-thinking-indicator">
+        <span class="spinner"></span>
+        <span data-i18n="aiThinking">AI đang suy nghĩ...</span>
+      </div>
+      <div class="board-actions">
+        <button class="btn btn-secondary" id="btn-new-game" data-i18n="newGame">Ván mới</button>
+        <button class="btn btn-secondary" id="btn-undo" data-i18n="undo">Hoàn tác</button>
+        <button class="btn btn-secondary" id="btn-resign" data-i18n="resign">Đầu hàng</button>
+        <button class="btn btn-ghost" id="btn-back-menu" data-i18n="mainMenu">Menu chính</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: move history -->
+    <aside class="panel panel-right">
+      <h3 data-i18n="moveHistory">Lịch sử nước đi</h3>
+      <div class="move-history" id="move-history"></div>
+    </aside>
+
+  </div>
+</section>
+
+<!-- ===================== PROMOTION MODAL ===================== -->
+<div id="promotion-modal" class="modal-overlay hidden">
+  <div class="modal-box promotion-box">
+    <h3 data-i18n="choosePromotion">Chọn quân phong cấp</h3>
+    <div class="promotion-choices" id="promotion-choices"></div>
+  </div>
+</div>
+
+<!-- ===================== SI KHI SKILL MODAL ===================== -->
+<div id="morale-skill-modal" class="modal-overlay hidden">
+  <div class="modal-box morale-skill-box">
+    <div class="morale-skill-glyph" id="morale-skill-glyph">♘</div>
+    <div class="morale-skill-morale-row">
+      <span data-i18n="moraleLabel">Sĩ Khí</span>
+      <span id="morale-skill-percent">70%</span>
+    </div>
+    <div class="morale-bar-track"><div class="morale-bar-fill" id="morale-skill-bar"></div></div>
+    <p class="morale-skill-name" id="morale-skill-name">Đột Kích</p>
+    <p class="morale-skill-cost" id="morale-skill-cost"></p>
+    <div class="modal-actions morale-skill-actions">
+      <button class="btn btn-secondary" id="morale-btn-normal" data-i18n="normalMove">Nước thường</button>
+      <button class="btn btn-primary" id="morale-btn-skill" data-i18n="useSkill">Dùng Skill</button>
+    </div>
+    <button class="btn btn-ghost morale-skill-cancel" id="morale-btn-cancel" data-i18n="cancel">Hủy</button>
+  </div>
+</div>
+
+<!-- ===================== GAME OVER MODAL ===================== -->
+<div id="gameover-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2 id="gameover-title" data-i18n="gameOver">Ván đấu kết thúc</h2>
+    <p id="gameover-reason"></p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="gameover-newgame" data-i18n="newGame">Ván mới</button>
+      <button class="btn btn-ghost" id="gameover-menu" data-i18n="mainMenu">Menu chính</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SETTINGS MODAL ===================== -->
+<div id="settings-modal" class="modal-overlay hidden">
+  <div class="modal-box settings-box">
+    <h2 data-i18n="settings">Cài đặt</h2>
+
+    <div class="settings-row">
+      <label data-i18n="language">Ngôn ngữ</label>
+      <select id="setting-language">
+        <option value="vi">Tiếng Việt</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <label data-i18n="boardTheme">Màu bàn cờ</label>
+      <select id="setting-board-theme">
+        <option value="classic-green" data-i18n="themeClassicGreen">Xanh cổ điển</option>
+        <option value="walnut">Walnut</option>
+        <option value="ocean">Ocean</option>
+        <option value="slate">Slate</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <label data-i18n="displayMode">Giao diện</label>
+      <label class="switch"><input type="checkbox" id="setting-theme"><span class="slider"></span></label>
+    </div>
+
+    <div class="settings-row">
+      <label data-i18n="soundOn">Âm thanh</label>
+      <label class="switch"><input type="checkbox" id="setting-sound" checked><span class="slider"></span></label>
+    </div>
+
+    <div class="settings-row">
+      <label data-i18n="animationOn">Hiệu ứng chuyển động</label>
+      <label class="switch"><input type="checkbox" id="setting-animation" checked><span class="slider"></span></label>
+    </div>
+
+    <div class="settings-row">
+      <label data-i18n="showCoords">Hiện tọa độ</label>
+      <label class="switch"><input type="checkbox" id="setting-coords" checked><span class="slider"></span></label>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="settings-close" data-i18n="close">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== HOW TO PLAY MODAL ===================== -->
+<div id="howto-modal" class="modal-overlay hidden">
+  <div class="modal-box howto-box">
+    <h2 data-i18n="howToPlay">Hướng dẫn chơi</h2>
+    <ul class="howto-list">
+      <li data-i18n="howto1">Chọn "Đấu nội bộ" để hai người chơi luân phiên trên cùng một máy.</li>
+      <li data-i18n="howto2">Chọn "Đấu với máy" để chơi với AI Stockfish, có thể chọn màu quân và độ khó.</li>
+      <li data-i18n="howto3">Kéo thả hoặc nhấp chọn quân rồi nhấp ô đích để di chuyển.</li>
+      <li data-i18n="howto4">Ô hợp lệ, quân vừa đi và vua đang bị chiếu sẽ được tô sáng.</li>
+      <li data-i18n="howto5">Dùng "Hoàn tác" để lùi lại nước đi, "Ván mới" để chơi lại.</li>
+      <li data-i18n="howtoMorale1">Chế độ Sĩ Khí: mỗi quân có thanh Sĩ Khí riêng, tăng dần khi quân đó đi.</li>
+      <li data-i18n="howtoMorale2">Khi đủ Sĩ Khí, bấm vào quân sẽ cho chọn "Nước thường" hoặc dùng Skill đặc biệt — dùng Skill sẽ tiêu hao Sĩ Khí.</li>
+    </ul>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="howto-close" data-i18n="close">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<div id="error-banner" class="error-banner hidden"></div>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+
+<script src="js/translation.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/stockfish-manager.js"></script>
+<script src="js/game.js"></script>
+<script src="js/morale-manager.js"></script>
+<script src="js/morale-skills.js"></script>
+<script src="js/morale-state.js"></script>
+<script src="js/morale-ai.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

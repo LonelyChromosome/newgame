@@ -1,0 +1,86 @@
+#board-wrapper{
+  width:100%;
+  max-width:560px;
+  aspect-ratio:1/1;
+}
+#chess-board{
+  width:100%;
+  height:100%;
+}
+
+/* Chessboard.js square colors, driven by our theme tokens */
+.white-1e1d7{ background-color:var(--board-light) !important; }
+.black-3c85d{ background-color:var(--board-dark) !important; }
+
+/* Board border / frame */
+#chess-board{
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 0 0 6px var(--bg-raised);
+}
+
+/* Highlight layers — applied to the square div via data-square attribute */
+[data-square]{ transition:box-shadow .12s ease; }
+[data-square].sq-selected{
+  box-shadow:inset 0 0 0 4px var(--accent-strong);
+}
+[data-square].sq-lastmove-from,
+[data-square].sq-lastmove-to{
+  box-shadow:inset 0 0 0 4px rgba(200,162,77,.55);
+}
+[data-square].sq-check{
+  box-shadow:inset 0 0 0 4px var(--danger);
+  animation:pulse-check 1s ease-in-out infinite;
+}
+@keyframes pulse-check{
+  0%,100%{ box-shadow:inset 0 0 0 4px var(--danger); }
+  50%{ box-shadow:inset 0 0 0 4px rgba(192,82,74,.35); }
+}
+
+/* Legal-move dots / capture rings, added as a child element */
+.move-hint{
+  position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  display:flex; align-items:center; justify-content:center;
+  pointer-events:none;
+}
+.move-hint.dot::after{
+  content:"";
+  width:26%; height:26%;
+  border-radius:50%;
+  background:rgba(20,20,20,.32);
+  animation:hint-in .12s ease-out;
+}
+.move-hint.capture::after{
+  content:"";
+  width:86%; height:86%;
+  border-radius:50%;
+  border:5px solid rgba(20,20,20,.32);
+  box-sizing:border-box;
+  animation:hint-in .12s ease-out;
+}
+@keyframes hint-in{
+  from{ transform:scale(.4); opacity:0; }
+  to{ transform:scale(1); opacity:1; }
+}
+
+[data-square]{ position:relative; }
+
+/* Si Khi — o dich hop le cua mot Skill Move dang cho */
+[data-square].sq-skill-target{
+  box-shadow:inset 0 0 0 4px var(--accent-strong);
+  animation:pulse-skill 1.1s ease-in-out infinite;
+}
+@keyframes pulse-skill{
+  0%,100%{ box-shadow:inset 0 0 0 4px var(--accent-strong); }
+  50%{ box-shadow:inset 0 0 0 4px rgba(224,185,93,.35); }
+}
+.move-hint.skill::after{
+  content:"⚡";
+  font-size:22px;
+  color:var(--accent-strong);
+  text-shadow:0 0 6px rgba(0,0,0,.6);
+  animation:hint-in .12s ease-out;
+}
+
+.move-san-skill{ color:var(--accent-strong) !important; font-weight:700; }
